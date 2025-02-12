@@ -12,8 +12,8 @@ export default function Login() {
     e.preventDefault();
     alert(`Email: ${'abc@gmail.com'}\nPassword: ${'123'}${isSignUp ? `\nUsername: ${username}` : ""}`);
     
-    // Redirect to Dashboard page
-    navigate("/dashboard");
+    // Redirect to main page
+    navigate("/main");
   };
 
   return (
