@@ -1,9 +1,9 @@
 import React from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import Login from "./login";
-import Dashboard from "./dashboard"; // Import the new page
-import Main from "./main"; // Import the Main component
-
+import Login from "./components/login";
+import Dashboard from "./components/dashboard"; // Import the new page
+import Main from "./components/main"; // Import the Main component
+import Chats from "./components/chats"; // Import the Chats component
 
 function App() {
   return (
@@ -12,6 +12,7 @@ function App() {
         <Route path="/" element={<Login />} /> 
         <Route path="/dashboard" element={<Dashboard />} /> 
         <Route path="/main" element={<Main />} /> 
+        <Route path="/chats" element={<Chats />} />
       </Routes>
 
     </Router>

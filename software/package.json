@@ -5,6 +5,7 @@
   "dependencies": {
     "@shadcn/ui": "^0.0.4",
     "autoprefixer": "^10.4.20",
+    "concurrently": "^9.1.2",
     "cra-template": "1.2.0",
     "postcss": "^8.5.2",
     "react": "^19.0.0",
@@ -15,12 +16,15 @@
     "web-vitals": "^4.2.4",
     "webpack": "^5.97.1"
   },
-  "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject"
-  },
+"scripts": {
+  "start": "concurrently \"npm run frontend\" \"npm run backend\"",
+  "frontend": "react-scripts start",
+  "backend": "cd backend && set FLASK_APP=app.py && flask run",
+  "build": "react-scripts build",
+  "test": "react-scripts test",
+  "eject": "react-scripts eject"
+}
+,
   "eslintConfig": {
     "extends": [
       "react-app",

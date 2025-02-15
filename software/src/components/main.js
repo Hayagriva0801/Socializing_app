@@ -1,5 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
+import Navbar from "./navbar";
 
 function main() {
   const notices = [
@@ -8,6 +9,10 @@ function main() {
   ];
 
   return (
+    <div>
+    <div>
+      <Navbar />
+    </div>
     <div>
       <h1>Notices</h1>
       <ul>
@@ -22,6 +27,7 @@ function main() {
       <Link to="/dashboard">
         <button>Post Your Notice</button>
       </Link>
+    </div>
     </div>
   );
 }
