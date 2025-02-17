@@ -6,11 +6,37 @@ function Dashboard() {
   const [description, setDescription] = useState("");
   const [filter, setFilter] = useState("");
 
-  const handlePostNotice = () => {
-    console.log("Notice Posted:", { title, description, filter });
-    // Here you can add logic to actually post the notice
+  // Handle posting the notice to the backend
+  const handlePostNotice = async () => {
+    const noticeData = {
+      title,
+      content: description,
+      created_at: new Date().toISOString(), // Add the current time
+      filter,
+    };
+  
+    try {
+      // Send the request to Flask backend (localhost:5000)
+      const response = await fetch('http://localhost:5000/create_notice', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(noticeData),
+      });
+  
+      if (!response.ok) {
+        throw new Error('Failed to post notice');
+      }
+  
+      const data = await response.json();
+      console.log('Notice posted successfully:', data);
+      alert(`Notice created successfully! Notice ID: ${data.notice_id}`);
+    } catch (error) {
+      console.error('Error posting notice:', error);
+    }
   };
-
+  
   return (
     <div className="flex justify-center items-center min-h-screen bg-gray-100">
       <div>
@@ -52,8 +78,6 @@ function Dashboard() {
         >
           Post Notice
         </button>
-
-
       </div>
     </div>
   );
