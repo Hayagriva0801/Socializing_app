@@ -4,7 +4,7 @@ from pymongo import MongoClient
 from bson import ObjectId
 
 app = Flask(__name__)  # ✅ This creates the Flask application instance
-CORS(app, resources={r"/*": {"origins": "http://localhost:3000"}})
+CORS(app)
 # MongoDB Connection
 client = MongoClient("mongodb+srv://cguhan03:guhan2003@cluster0.kavca.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0")
 db = client["Chat_app"]  # ✅ Database name

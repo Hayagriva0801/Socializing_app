@@ -66,9 +66,10 @@ function Dashboard() {
           onChange={(e) => setFilter(e.target.value)}
           className="mt-4 p-2 border border-gray-300 rounded"
         >
-          <option value="">Select Filter</option>
-          <option value="filter1">Filter 1</option>
-          <option value="filter2">Filter 2</option>
+          <option value="">Select Tags</option>
+          <option value="filter1">Sports</option>
+          <option value="filter2">Studies</option>
+          <option value="filter3">Dance</option>
           {/* Add more filters as needed */}
         </select>
         
