@@ -14,7 +14,7 @@ function Dashboard() {
       created_at: new Date().toISOString(), // Add the current time
       filter,
     };
-  
+    console.log(filter);
     try {
       // Send the request to Flask backend (localhost:5000)
       const response = await fetch('http://localhost:5000/create_notice', {
@@ -67,9 +67,9 @@ function Dashboard() {
           className="mt-4 p-2 border border-gray-300 rounded"
         >
           <option value="">Select Tags</option>
-          <option value="filter1">Sports</option>
-          <option value="filter2">Studies</option>
-          <option value="filter3">Dance</option>
+          <option value="Sports">Sports</option>
+          <option value="Studies">Studies</option>
+          <option value="Dance">Dance</option>
           {/* Add more filters as needed */}
         </select>
         
