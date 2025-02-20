@@ -18,7 +18,7 @@ def create_notice():
     notice = {
         "title": data.get("title"),
         "content": data.get("content"),
-        "filter":data.get(""),
+        "filter":data.get("filter"),
         "created_at": data.get("created_at")  # You can use datetime here
     }
     
