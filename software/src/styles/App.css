@@ -1,0 +1,68 @@
+
+
+/* Apply background to the whole page under the navbar */
+body {
+  background: linear-gradient(135deg, #7d3537, #fad0c4);
+  font-family: 'Arial', sans-serif;
+  min-height: 100vh;
+  margin: 0;
+  padding: 0;
+}
+
+
+
+/* Notice Card Styling */
+.notice-card {
+  background: rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(10px);
+  border-radius: 15px;
+  padding: 20px;
+  margin: 15px;
+  width: 320px;
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+/* Hover effect on Notice Cards */
+.notice-card:hover {
+  transform: scale(1.05);
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.3);
+}
+
+/* Bold Title inside Cards */
+.notice-title {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #222;
+  border-bottom: 2px solid rgba(0, 0, 0, 0.1);
+  padding-bottom: 8px;
+  margin-bottom: 10px;
+}
+
+/* Notice Content */
+.notice-content {
+  font-size: 1rem;
+  color: #444;
+  margin-bottom: 10px;
+}
+
+/* Tags (aligned to bottom-left) */
+.notice-tags {
+  font-size: 0.9rem;
+  font-weight: bold;
+  color: #ff6a00;
+  background: rgba(255, 106, 0, 0.1);
+  padding: 4px 8px;
+  border-radius: 5px;
+  display: inline-block;
+}
+
+/* Date Styling */
+.notice-date {
+  font-size: 0.8rem;
+  color: gray;
+  margin-top: 10px;
+}
+
+
+ 

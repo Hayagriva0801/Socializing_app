@@ -4,6 +4,7 @@ import Login from "./components/login";
 import Dashboard from "./components/dashboard"; // Import the new page
 import Main from "./components/main"; // Import the Main component
 import Chats from "./components/chats"; // Import the Chats component
+import "./styles/App.css"
 
 function App() {
   return (
