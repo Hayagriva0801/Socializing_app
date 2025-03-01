@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
@@ -7,6 +7,13 @@ export default function Login() {
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const navigate = useNavigate();
+
+  // 🚀 Redirect if user is already logged in
+  useEffect(() => {
+    if (localStorage.getItem("currentUser")) {
+      navigate("/main");
+    }
+  }, [navigate]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -21,13 +28,16 @@ export default function Login() {
       if (response.status === 200) {
         const { username } = response.data;
 
-        // Store logged-in user's username in localStorage
-        localStorage.setItem("currentUser", username);
+        if (!username) {
+          throw new Error("Username missing from server response!");
+        }
 
-        navigate("/main"); // Redirect after login
+        localStorage.setItem("currentUser", username); // ✅ Store username
+        navigate("/main"); // ✅ Redirect to main page
       }
     } catch (err) {
-      setError(err.response?.data?.error || "Login failed!");
+      console.error("Login error:", err);
+      setError(err.response?.data?.error || "Invalid email or password!");
     }
   };
 
@@ -36,6 +46,7 @@ export default function Login() {
       <div className="w-96 p-6 shadow-lg rounded-xl bg-white">
         <h2 className="text-2xl font-semibold text-center mb-4">Sign In</h2>
         {error && <p className="text-red-500 text-center">{error}</p>}
+        
         <form onSubmit={handleSubmit}>
           <div className="mb-4">
             <label className="block text-sm font-medium text-gray-700">Email</label>
@@ -48,6 +59,7 @@ export default function Login() {
               required
             />
           </div>
+
           <div className="mb-4">
             <label className="block text-sm font-medium text-gray-700">Password</label>
             <input
@@ -59,6 +71,7 @@ export default function Login() {
               required
             />
           </div>
+
           <button
             type="submit"
             className="w-full bg-blue-500 text-white py-2 rounded hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
@@ -66,6 +79,16 @@ export default function Login() {
             Sign In
           </button>
         </form>
+
+        <div className="mt-4 text-center">
+          <p className="text-sm">Don't have an account?</p>
+          <button
+            onClick={() => navigate("/register")}
+            className="text-blue-500 hover:underline"
+          >
+            Sign Up
+          </button>
+        </div>
       </div>
     </div>
   );

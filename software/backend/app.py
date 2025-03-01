@@ -72,8 +72,9 @@ def create_notice():
     notice = {
         "title": data.get("title"),
         "content": data.get("content"),
-        "filter":data.get("filter"),
-        "created_at": data.get("created_at")  # You can use datetime here
+        "created_at": data.get("created_at"),  # You can use datetime here
+        "filters": data["filters"],
+        "username": data["username"],
     }
     
     # Insert notice into the MongoDB collection
