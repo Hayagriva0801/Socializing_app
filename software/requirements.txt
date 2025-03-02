@@ -4,5 +4,4 @@ flask-cors
 python-dotenv
 setuptools
 bcrypt
-os
-werkzeug.utils
+werkzeug
