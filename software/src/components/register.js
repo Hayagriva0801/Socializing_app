@@ -28,6 +28,7 @@ export default function Register() {
       });
 
       if (response.status === 201) {
+        localStorage.setItem("userEmail", email);
         setSuccess("Registration successful! Redirecting...");
         setTimeout(() => navigate("/build-profile"), 2000);
       }

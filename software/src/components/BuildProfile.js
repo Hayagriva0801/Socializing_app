@@ -1,8 +1,10 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
 export default function BuildProfile() {
+    const navigate = useNavigate();
+    const [email, setEmail] = useState(""); // Store email from localStorage
     const [formData, setFormData] = useState({
         name: "",
         dob: "",
@@ -18,7 +20,16 @@ export default function BuildProfile() {
     const [photo, setPhoto] = useState(null);
     const [error, setError] = useState("");
     const [success, setSuccess] = useState("");
-    const navigate = useNavigate();
+
+    // ✅ Fetch registered user email from localStorage
+    useEffect(() => {
+        const storedEmail = localStorage.getItem("userEmail"); // Retrieve email
+        if (storedEmail) {
+            setEmail(storedEmail);
+        } else {
+            navigate("/login"); // Redirect if no email is found
+        }
+    }, [navigate]);
 
     // List of selectable interest tags
     const interestOptions = [
@@ -32,7 +43,7 @@ export default function BuildProfile() {
         "Mindfulness", "Self-Development"
     ];
 
-    // Handle text input fields
+    // Handle input changes
     const handleChange = (e) => {
         const { name, value } = e.target;
         setFormData({ ...formData, [name]: value });
@@ -47,8 +58,8 @@ export default function BuildProfile() {
     const handleInterestToggle = (interest) => {
         setFormData((prevState) => {
             const updatedInterests = prevState.interests.includes(interest)
-                ? prevState.interests.filter((i) => i !== interest) // Remove if exists
-                : [...prevState.interests, interest]; // Add if not exists
+                ? prevState.interests.filter((i) => i !== interest)
+                : [...prevState.interests, interest];
             return { ...prevState, interests: updatedInterests };
         });
     };
@@ -59,25 +70,16 @@ export default function BuildProfile() {
         setError("");
         setSuccess("");
 
-        // Ensure required fields are filled
-        if (
-            !formData.name ||
-            !formData.dob ||
-            formData.interests.length === 0 ||
-            !formData.college ||
-            !formData.university ||
-            !formData.location ||
-            !formData.department ||
-            !formData.degree ||
-            !formData.course ||
-            !formData.year
-        ) {
+        if (!email || !formData.name || !formData.dob || formData.interests.length === 0 ||
+            !formData.college || !formData.university || !formData.location ||
+            !formData.department || !formData.degree || !formData.course || !formData.year) {
             setError("All fields except photo are required!");
             return;
         }
 
         try {
             const profileData = new FormData();
+            profileData.append("email", email); // ✅ Attach the user's email
             Object.keys(formData).forEach((key) =>
                 profileData.append(key, JSON.stringify(formData[key]))
             );
@@ -88,7 +90,7 @@ export default function BuildProfile() {
             });
 
             if (response.status === 201) {
-                setSuccess("Profile created successfully! Redirecting to login...");
+                setSuccess("Profile saved successfully! Redirecting to login...");
                 setTimeout(() => navigate("/login"), 2000);
             }
         } catch (err) {
@@ -97,62 +99,61 @@ export default function BuildProfile() {
     };
 
     return (
-        <div className="flex justify-center items-center min-h-screen bg-gray-100 p-6">
-            <div className="bg-white shadow-xl rounded-2xl p-8 w-full max-w-3xl">
-                <h2 className="text-3xl font-semibold text-center mb-6 text-gray-800">Build Your Profile</h2>
-                {error && <p className="text-red-500 text-center">{error}</p>}
-                {success && <p className="text-green-500 text-center">{success}</p>}
-                <form onSubmit={handleSubmit} className="space-y-4">
+        <div className="w-100 min-vh-100 bg-light-gray flex justify-center items-center">
+            <div className="shadow-5 pa4 bg-white br3 w-40">
+                <h2 className="f3 text-center">Build Your Profile</h2>
+                {error && <p className="red tc">{error}</p>}
+                {success && <p className="green tc">{success}</p>}
+                <form onSubmit={handleSubmit} className="space-y-3">
 
                     {/* Name */}
                     <div>
-                        <label className="block text-sm font-medium text-gray-700">Full Name</label>
+                        <label className="db mb2">Full Name</label>
                         <input
                             type="text"
                             name="name"
                             value={formData.name}
                             onChange={handleChange}
-                            className="mt-1 p-3 w-full border rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            className="pa2 w-100 ba b--black-20 br2"
                             required
                         />
                     </div>
 
                     {/* Date of Birth */}
                     <div>
-                        <label className="block text-sm font-medium text-gray-700">Date of Birth</label>
+                        <label className="db mb2">Date of Birth</label>
                         <input
                             type="date"
                             name="dob"
                             value={formData.dob}
                             onChange={handleChange}
-                            className="mt-1 p-3 w-full border rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            className="pa2 w-100 ba b--black-20 br2"
                             required
                         />
                     </div>
 
                     {/* Upload Photo */}
                     <div>
-                        <label className="block text-sm font-medium text-gray-700">Upload Photo (Optional)</label>
+                        <label className="db mb2">Upload Photo (Optional)</label>
                         <input
                             type="file"
                             accept="image/*"
                             onChange={handlePhotoUpload}
-                            className="mt-1 p-2 w-full border rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            className="pa2 w-100 ba b--black-20 br2"
                         />
                     </div>
 
                     {/* Interests Selection */}
                     <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-2">Areas of Interest</label>
-                        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2">
-                            {interestOptions.map((interest, index) => (
+                        <label className="db mb2">Select Areas of Interest</label>
+                        <div className="flex flex-wrap">
+                            {interestOptions.map((interest) => (
                                 <button
-                                    key={index}
+                                    key={interest}
                                     type="button"
-                                    className={`px-3 py-2 border rounded-lg text-sm font-medium transition ${formData.interests.includes(interest)
-                                        ? "bg-blue-500 text-white border-blue-500"
-                                        : "bg-gray-100 text-gray-800 border-gray-300 hover:bg-gray-200"
-                                        }`}
+                                    className={`mr2 mb2 pa2 br2 ${formData.interests.includes(interest)
+                                        ? "bg-blue white"
+                                        : "bg-light-gray"}`}
                                     onClick={() => handleInterestToggle(interest)}
                                 >
                                     {interest}
@@ -165,13 +166,13 @@ export default function BuildProfile() {
                     {["college", "university", "location", "department", "degree", "course", "year"].map(
                         (field) => (
                             <div key={field}>
-                                <label className="block text-sm font-medium text-gray-700 capitalize">{field.replace("_", " ")}</label>
+                                <label className="db mb2 capitalize">{field.replace("_", " ")}</label>
                                 <input
                                     type="text"
                                     name={field}
                                     value={formData[field]}
                                     onChange={handleChange}
-                                    className="mt-1 p-3 w-full border rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                    className="pa2 w-100 ba b--black-20 br2"
                                     required
                                 />
                             </div>
@@ -181,7 +182,7 @@ export default function BuildProfile() {
                     {/* Submit Button */}
                     <button
                         type="submit"
-                        className="w-full bg-blue-500 text-white py-3 rounded-lg shadow-md hover:bg-blue-600 transition"
+                        className="mt3 w-100 pa2 bg-blue white br2 grow pointer"
                     >
                         Submit Profile
                     </button>
