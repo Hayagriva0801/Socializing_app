@@ -4,6 +4,8 @@ from pymongo import MongoClient
 from bson import ObjectId
 import datetime
 import bcrypt
+import os
+from werkzeug.utils import secure_filename
 
 app = Flask(__name__)  # ✅ This creates the Flask application instance
 CORS(app, resources={r"/*": {"origins": "http://localhost:3000"}})
@@ -14,6 +16,7 @@ db = client["Chat_app"]  # ✅ Database name
 collection = db["user"]  # ✅ Collection name
 messages_collection = db["messages"]
 notices_collection=db["Notices"]
+user_profiles = db["user_profile"]
 
 # Register a New User
 @app.route('/register', methods=['POST'])
@@ -158,6 +161,60 @@ def get_chat_users(username):
         for chat in chat_users
     ])
 
+
+# Directory to store uploaded images
+UPLOAD_FOLDER = "uploads"
+if not os.path.exists(UPLOAD_FOLDER):
+    os.makedirs(UPLOAD_FOLDER)
+
+app.config["UPLOAD_FOLDER"] = UPLOAD_FOLDER
+
+@app.route("/build-profile", methods=["POST"])
+def build_profile():
+    try:
+        # Get data from the request
+        name = request.form.get("name")
+        dob = request.form.get("dob")
+        interests = request.form.get("interests")
+        college = request.form.get("college")
+        university = request.form.get("university")
+        location = request.form.get("location")
+        department = request.form.get("department")
+        degree = request.form.get("degree")
+        course = request.form.get("course")
+        year = request.form.get("year")
+
+        # Handle file upload (if provided)
+        photo_url = None
+        if "photo" in request.files:
+            photo = request.files["photo"]
+            if photo.filename:
+                filename = secure_filename(photo.filename)
+                photo_path = os.path.join(app.config["UPLOAD_FOLDER"], filename)
+                photo.save(photo_path)
+                photo_url = f"/uploads/{filename}"  # Relative path for frontend access
+
+        # Insert data into MongoDB
+        user_profile_data = {
+            "name": name,
+            "dob": dob,
+            "interests": interests,
+            "college": college,
+            "university": university,
+            "location": location,
+            "department": department,
+            "degree": degree,
+            "course": course,
+            "year": year,
+            "photo": photo_url  # Store photo path if uploaded
+        }
+
+        user_profiles.insert_one(user_profile_data)  # Store in MongoDB
+
+        return jsonify({"message": "Profile created successfully!"}), 201
+
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
 
 
 if __name__ == "__main__":

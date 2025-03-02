@@ -29,7 +29,7 @@ export default function Register() {
 
       if (response.status === 201) {
         setSuccess("Registration successful! Redirecting...");
-        setTimeout(() => navigate("/login"), 2000);
+        setTimeout(() => navigate("/build-profile"), 2000);
       }
     } catch (err) {
       setError(err.response?.data?.error || "Registration failed!");
