@@ -1,22 +1,36 @@
 import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, Link } from "react-router-dom";
 import axios from "axios";
+import EmojiPicker from "emoji-picker-react";
 
 const ChatRoom = () => {
   const { username } = useParams(); // Chat partner's username
   const [messages, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState("");
+  const [showEmojiPicker, setShowEmojiPicker] = useState(false);
+  const [users, setUsers] = useState([]); // To store all users
 
   const currentUser = localStorage.getItem("currentUser"); // Logged-in user
 
   useEffect(() => {
     fetchMessages();
+    fetchUsers();
   }, []);
 
   const fetchMessages = () => {
     axios.get(`http://127.0.0.1:5000/messages/${currentUser}/${username}`)
-      .then(response => setMessages(response.data))
+      .then(response => {
+        setMessages(response.data);
+      })
       .catch(error => console.error("Error fetching messages:", error));
+  };
+
+  const fetchUsers = () => {
+    axios.get("http://127.0.0.1:5000/all_users") // Fetch all users
+      .then(response => {
+        setUsers(response.data);
+      })
+      .catch(error => console.error("Error fetching users:", error));
   };
 
   const sendMessage = () => {
@@ -33,12 +47,44 @@ const ChatRoom = () => {
     }).catch(error => console.error("Error sending message:", error));
   };
 
+  const handleEmojiClick = (emojiObject) => {
+    setNewMessage((prev) => prev + emojiObject.emoji);
+  };
+
   return (
     <div style={{ display: "flex", height: "100vh" }}>
-      {/* Chat List Sidebar */}
-      <div style={{ width: "30%", backgroundColor: "#111", color: "white", padding: "20px", overflowY: "scroll" }}>
-        <h2>Chats</h2>
-        <p>Go back to chats list</p>
+      {/* Left Sidebar - Dark Green */}
+      <div style={{ 
+        width: "30%", 
+        backgroundColor: "#054d44",  // Dark green sidebar
+        padding: "20px", 
+        overflowY: "scroll",
+        borderRight: "2px solid #bbb",
+        color: "white"
+      }}>
+        <h2 style={{ marginBottom: "15px", color: "#dff0d8", fontSize: "22px" }}>Chats</h2>
+        <ul style={{ listStyleType: "none", padding: "0" }}>
+          {users.length > 0 ? (
+            users.map((user, index) => (
+              user.username !== currentUser && user.username !== username && ( // Hide current and selected user
+                <li key={index} style={{ 
+                  padding: "12px", 
+                  marginBottom: "5px",
+                  borderBottom: "1px solid #aaa",
+                  backgroundColor: user.username === username ? "#0f766e" : "transparent", // Highlight selected chat
+                  cursor: "pointer",
+                  borderRadius: "8px"
+                }}>
+                  <Link to={`/chat/${user.username}`} style={{ textDecoration: "none", color: "white", fontWeight: "bold", display: "block" }}>
+                    {user.username}
+                  </Link>
+                </li>
+              )
+            ))
+          ) : (
+            <p>No other users available</p>
+          )}
+        </ul>
       </div>
 
       {/* Chat Window */}
@@ -67,8 +113,21 @@ const ChatRoom = () => {
           ))}
         </div>
 
-        {/* Chat Input */}
-        <div style={{ padding: "10px", backgroundColor: "#f0f0f0", display: "flex" }}>
+        {/* Chat Input & Emoji Picker */}
+        <div style={{ padding: "10px", backgroundColor: "#f0f0f0", display: "flex", alignItems: "center" }}>
+          <button 
+            onClick={() => setShowEmojiPicker(!showEmojiPicker)}
+            style={{ padding: "10px", backgroundColor: "#128c7e", color: "white", borderRadius: "10px", marginRight: "10px" }}
+          >
+            😊
+          </button>
+
+          {showEmojiPicker && (
+            <div style={{ position: "absolute", bottom: "60px", left: "40%" }}>
+              <EmojiPicker onEmojiClick={handleEmojiClick} />
+            </div>
+          )}
+
           <input 
             type="text"
             value={newMessage}
