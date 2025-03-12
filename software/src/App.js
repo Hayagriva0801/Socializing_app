@@ -7,7 +7,7 @@ import Chats from "./components/chats"; // Import the Chats component
 import ChatRoom from "./components/ChatRoom";
 import Register from "./components/register";
 import BuildProfile from "./components/BuildProfile"; // Import the BuildProfile component
-
+import Profile from "./components/Profile"; // Import Profile component
 import "./styles/App.css";
 
 function App() {
@@ -22,6 +22,8 @@ function App() {
         <Route path="/main" element={<Main />} />
         <Route path="/chats" element={<Chats />} />
         <Route path="/chat/:username" element={<ChatRoom />} />
+        <Route path="/profile" element={<Profile />} />
+
       </Routes>
     </Router>
   );

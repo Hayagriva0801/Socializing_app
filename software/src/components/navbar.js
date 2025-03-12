@@ -14,12 +14,13 @@ function Navbar() {
     return (
         <div className="navbar">
             <div className="leftside">
-                <img src={Logo} alt="Logo" />   
+                <img src={Logo} alt="Logo" />
             </div>
             <div className="rightside">
                 <Link to="/main">Home</Link>
                 <Link to="/dashboard">Create Notice</Link>
                 <Link to="/chats">Chats</Link>
+                <Link to="/profile">Profile</Link>
                 <button onClick={handleLogout} className="logout-button">Logout</button>
             </div>
         </div>

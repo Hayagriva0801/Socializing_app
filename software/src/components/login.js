@@ -6,6 +6,7 @@ export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+  const [success, setSuccess] = useState(false); // ✅ Success state
   const navigate = useNavigate();
 
   // 🚀 Redirect if user is already logged in
@@ -18,6 +19,7 @@ export default function Login() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
+    setSuccess(false); // Reset success message
 
     try {
       const response = await axios.post("http://127.0.0.1:5000/login", {
@@ -32,8 +34,15 @@ export default function Login() {
           throw new Error("Username missing from server response!");
         }
 
-        localStorage.setItem("currentUser", username); // ✅ Store username
-        navigate("/main"); // ✅ Redirect to main page
+        // ✅ Store email and username in localStorage
+        localStorage.setItem("currentUser", username);
+        localStorage.setItem("userEmail", email); // ✅ Store email for profile fetching
+
+        // ✅ Show success message before redirecting
+        setSuccess(true);
+        setTimeout(() => {
+          navigate("/main"); // ✅ Redirect after 2 seconds
+        }, 2000);
       }
     } catch (err) {
       console.error("Login error:", err);
@@ -45,8 +54,14 @@ export default function Login() {
     <div className="flex justify-center items-center min-h-screen bg-gray-100">
       <div className="w-96 p-6 shadow-lg rounded-xl bg-white">
         <h2 className="text-2xl font-semibold text-center mb-4">Sign In</h2>
+
         {error && <p className="text-red-500 text-center">{error}</p>}
-        
+        {success && (
+          <div className="text-green-500 text-center bg-green-100 p-2 rounded">
+            ✅ Logged in successfully! Redirecting...
+          </div>
+        )}
+
         <form onSubmit={handleSubmit}>
           <div className="mb-4">
             <label className="block text-sm font-medium text-gray-700">Email</label>

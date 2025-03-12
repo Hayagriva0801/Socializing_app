@@ -209,6 +209,15 @@ def build_profile():
 
     except Exception as e:
         return jsonify({"error": str(e)}), 500
+    
+# Fetch user profile by email
+@app.route("/profile/<email>", methods=["GET"])
+def get_profile(email):
+    user_profile = user_profiles.find_one({"email": email}, {"_id": 0})  # Fetch without _id
+    if not user_profile:
+        return jsonify({"error": "Profile not found!"}), 404
+    return jsonify(user_profile)
+
 
 
 if __name__ == "__main__":
