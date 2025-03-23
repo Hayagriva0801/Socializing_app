@@ -1,15 +1,15 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import "tachyons";
 
 export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
-  const [success, setSuccess] = useState(false); // ✅ Success state
+  const [success, setSuccess] = useState(false);
   const navigate = useNavigate();
 
-  // 🚀 Redirect if user is already logged in
   useEffect(() => {
     if (localStorage.getItem("currentUser")) {
       navigate("/main");
@@ -19,7 +19,7 @@ export default function Login() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
-    setSuccess(false); // Reset success message
+    setSuccess(false);
 
     try {
       const response = await axios.post("http://127.0.0.1:5000/login", {
@@ -29,20 +29,15 @@ export default function Login() {
 
       if (response.status === 200) {
         const { username } = response.data;
-
         if (!username) {
           throw new Error("Username missing from server response!");
         }
 
-        // ✅ Store email and username in localStorage
         localStorage.setItem("currentUser", username);
-        localStorage.setItem("userEmail", email); // ✅ Store email for profile fetching
+        localStorage.setItem("userEmail", email);
 
-        // ✅ Show success message before redirecting
         setSuccess(true);
-        setTimeout(() => {
-          navigate("/main"); // ✅ Redirect after 2 seconds
-        }, 2000);
+        setTimeout(() => navigate("/main"), 2000);
       }
     } catch (err) {
       console.error("Login error:", err);
@@ -51,55 +46,55 @@ export default function Login() {
   };
 
   return (
-    <div className="flex justify-center items-center min-h-screen bg-gray-100">
-      <div className="w-96 p-6 shadow-lg rounded-xl bg-white">
-        <h2 className="text-2xl font-semibold text-center mb-4">Sign In</h2>
+    <div className="flex justify-center items-center min-vh-100 bg-light-red">
+      <div className="w-100 mw6 pa4 shadow-5 br3 bg-white">
+        <h2 className="f2 tc">Sign In</h2>
 
-        {error && <p className="text-red-500 text-center">{error}</p>}
+        {error && <p className="red tc">{error}</p>}
         {success && (
-          <div className="text-green-500 text-center bg-green-100 p-2 rounded">
+          <div className="green bg-washed-green pa2 br2 tc">
             ✅ Logged in successfully! Redirecting...
           </div>
         )}
 
-        <form onSubmit={handleSubmit}>
-          <div className="mb-4">
-            <label className="block text-sm font-medium text-gray-700">Email</label>
+        <form onSubmit={handleSubmit} className="measure center">
+          <div className="mb3">
+            <label className="db fw6 lh-copy f6">Email</label>
             <input
               type="email"
               placeholder="Enter your email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="mt-1 p-2 w-full border rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="pa2 input-reset ba bg-transparent hover-bg-light-gray w-100"
               required
             />
           </div>
 
-          <div className="mb-4">
-            <label className="block text-sm font-medium text-gray-700">Password</label>
+          <div className="mb3">
+            <label className="db fw6 lh-copy f6">Password</label>
             <input
               type="password"
               placeholder="Enter your password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              className="mt-1 p-2 w-full border rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="pa2 input-reset ba bg-transparent hover-bg-light-gray w-100"
               required
             />
           </div>
 
           <button
             type="submit"
-            className="w-full bg-blue-500 text-white py-2 rounded hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="b ph3 pv2 input-reset ba b--black bg-blue white grow pointer f6"
           >
             Sign In
           </button>
         </form>
 
-        <div className="mt-4 text-center">
-          <p className="text-sm">Don't have an account?</p>
+        <div className="mt3 tc">
+          <p className="f6">Don't have an account?</p>
           <button
             onClick={() => navigate("/register")}
-            className="text-blue-500 hover:underline"
+            className="blue pointer underline bg-transparent bn f6"
           >
             Sign Up
           </button>

@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import "tachyons";
 
 export default function Register() {
   const [email, setEmail] = useState("");
@@ -38,61 +39,61 @@ export default function Register() {
   };
 
   return (
-    <div className="flex justify-center items-center min-h-screen bg-gray-100">
-      <div className="w-96 p-6 shadow-lg rounded-xl bg-white">
-        <h2 className="text-2xl font-semibold text-center mb-4">Sign Up</h2>
-        {error && <p className="text-red-500 text-center">{error}</p>}
-        {success && <p className="text-green-500 text-center">{success}</p>}
-        <form onSubmit={handleSubmit}>
-          <div className="mb-4">
-            <label className="block text-sm font-medium text-gray-700">Username</label>
+    <div className="flex justify-center items-center min-vh-100 bg-light-red">
+      <div className="w-100 mw6 pa4 shadow-5 br3 bg-white">
+        <h2 className="f2 tc">Sign Up</h2>
+        {error && <p className="red tc">{error}</p>}
+        {success && <p className="green tc">{success}</p>}
+        <form onSubmit={handleSubmit} className="measure center">
+          <div className="mb3">
+            <label className="db fw6 lh-copy f6">Username</label>
             <input
               type="text"
               placeholder="Enter your username"
               value={username}
               onChange={(e) => setUsername(e.target.value)}
-              className="mt-1 p-2 w-full border rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="pa2 input-reset ba bg-transparent hover-bg-light-gray w-100"
               required
             />
           </div>
-          <div className="mb-4">
-            <label className="block text-sm font-medium text-gray-700">Email</label>
+          <div className="mb3">
+            <label className="db fw6 lh-copy f6">Email</label>
             <input
               type="email"
               placeholder="Enter your email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="mt-1 p-2 w-full border rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="pa2 input-reset ba bg-transparent hover-bg-light-gray w-100"
               required
             />
           </div>
-          <div className="mb-4">
-            <label className="block text-sm font-medium text-gray-700">Password</label>
+          <div className="mb3">
+            <label className="db fw6 lh-copy f6">Password</label>
             <input
               type="password"
               placeholder="Enter your password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              className="mt-1 p-2 w-full border rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="pa2 input-reset ba bg-transparent hover-bg-light-gray w-100"
               required
             />
           </div>
           <button
             type="submit"
-            className="w-full bg-blue-500 text-white py-2 rounded hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="b ph3 pv2 input-reset ba b--black bg-blue white grow pointer f6"
           >
             Sign Up
           </button>
         </form>
-        <p className="text-center text-sm mt-4">
-          Already have an account?{" "}
-          <span
-            className="text-blue-500 cursor-pointer"
+        <div className="mt3 tc">
+          <p className="f6">Already have an account?</p>
+          <button
             onClick={() => navigate("/login")}
+            className="blue pointer underline bg-transparent bn f6"
           >
             Sign In
-          </span>
-        </p>
+          </button>
+        </div>
       </div>
     </div>
   );
