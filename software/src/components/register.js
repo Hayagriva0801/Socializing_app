@@ -39,11 +39,29 @@ export default function Register() {
   };
 
   return (
-    <div className="flex justify-center items-center min-vh-100 bg-light-red">
-      <div className="w-100 mw6 pa4 shadow-5 br3 bg-white">
-        <h2 className="f2 tc">Sign Up</h2>
+    <div
+      className="flex justify-center items-center min-vh-100"
+      style={{
+        background: "linear-gradient(120deg, #ff4e50, #f9d423)",
+        fontFamily: "sans-serif",
+      }}
+    >
+      <div
+        className="br3 pa4 shadow-5"
+        style={{
+          backgroundColor: "white",
+          minWidth: "350px",
+          maxWidth: "400px",
+          width: "100%",
+          borderRadius: "15px",
+          padding: "40px",
+        }}
+      >
+        <h2 className="tc f2 mb4">Sign Up</h2>
+
         {error && <p className="red tc">{error}</p>}
         {success && <p className="green tc">{success}</p>}
+
         <form onSubmit={handleSubmit} className="measure center">
           <div className="mb3">
             <label className="db fw6 lh-copy f6">Username</label>
@@ -52,7 +70,7 @@ export default function Register() {
               placeholder="Enter your username"
               value={username}
               onChange={(e) => setUsername(e.target.value)}
-              className="pa2 input-reset ba bg-transparent hover-bg-light-gray w-100"
+              className="pa3 input-reset ba b--black-20 w-100 br2"
               required
             />
           </div>
@@ -63,7 +81,7 @@ export default function Register() {
               placeholder="Enter your email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="pa2 input-reset ba bg-transparent hover-bg-light-gray w-100"
+              className="pa3 input-reset ba b--black-20 w-100 br2"
               required
             />
           </div>
@@ -74,22 +92,23 @@ export default function Register() {
               placeholder="Enter your password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              className="pa2 input-reset ba bg-transparent hover-bg-light-gray w-100"
+              className="pa3 input-reset ba b--black-20 w-100 br2"
               required
             />
           </div>
           <button
             type="submit"
-            className="b ph3 pv2 input-reset ba b--black bg-blue white grow pointer f6"
+            className="w-100 ph3 pv2 input-reset ba b--transparent bg-dark-red white br2 grow pointer f5"
           >
             Sign Up
           </button>
         </form>
-        <div className="mt3 tc">
+
+        <div className="mt4 tc">
           <p className="f6">Already have an account?</p>
           <button
             onClick={() => navigate("/login")}
-            className="blue pointer underline bg-transparent bn f6"
+            className="pointer underline bg-transparent bn dark-blue f6"
           >
             Sign In
           </button>
