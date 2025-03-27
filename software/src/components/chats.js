@@ -1,70 +1,49 @@
-import React, { useEffect, useState } from "react";
-import { Link, useParams } from "react-router-dom";
-import axios from "axios";
+import React from "react";
+import { useNavigate } from "react-router-dom";
 
-const Chats = () => {
-  const [users, setUsers] = useState([]);
-  const currentUser = localStorage.getItem("currentUser"); // Logged-in user
-  const { username: selectedChat } = useParams(); // Get selected chat user
-
-  useEffect(() => {
-    if (!currentUser) return;
-
-    axios.get("http://127.0.0.1:5000/all_users") // Fetch all registered users
-      .then(response => {
-        setUsers(response.data);
-      })
-      .catch(error => console.error("Error fetching users:", error));
-  }, [currentUser]);
+const Card = ({ title, content, filters, created_at, username, userId }) => {
+  const navigate = useNavigate();
 
   return (
-    <div style={{ display: "flex", height: "100vh" }}>
-      {/* Left Sidebar - Chat List */}
-      <div style={{ 
-        width: "30%", 
-        backgroundColor: "#054d44",  // Dark green sidebar
-        padding: "20px", 
-        overflowY: "scroll",
-        borderRight: "2px solid #bbb",
-        color: "white"
-      }}>
-        <h2 style={{ marginBottom: "15px", color: "#dff0d8", fontSize: "22px" }}>Chats</h2>
-        <ul style={{ listStyleType: "none", padding: "0" }}>
-          {users.length > 0 ? (
-            users.map((user, index) => (
-              user.username !== currentUser && ( // Hide the current user from the list
-                <li key={index} style={{ 
-                  padding: "12px", 
-                  marginBottom: "5px",
-                  borderBottom: "1px solid #aaa",
-                  backgroundColor: user.username === selectedChat ? "#0f766e" : "transparent", // Highlight selected chat
-                  cursor: "pointer",
-                  borderRadius: "8px"
-                }}>
-                  <Link to={`/chat/${user.username}`} style={{ textDecoration: "none", color: "white", fontWeight: "bold", display: "block" }}>
-                    {user.username}
-                  </Link>
-                </li>
-              )
-            ))
-          ) : (
-            <p>No users available</p>
-          )}
-        </ul>
+    <div className="bg-lightest-blue br3 shadow-5 pa4 grow w-90 mw6 center ba b--light-gray">
+      {/* Title with Line Below */}
+      <h2 className="f3 fw6 tc mb2">{title}</h2>
+      <hr className="ba black w-100 center mb3" />
+
+      {/* Description */}
+      <p className="gray f5 lh-copy mb3">{content}</p>
+
+      {/* Show Username with Chat Button */}
+      <div className="flex items-center justify-between mb3">
+        <p className="dark-gray f5 fw6">By: {username}</p>
+        <button
+          className="bg-dark-blue white br-pill pa2 ph3 f6 fw6 grow pointer bn"
+          onClick={() => navigate(`/chat/${username}`)}
+        >
+          Chat with {username}
+        </button>
       </div>
 
-      {/* Right Side - Chat Window with Message */}
-      <div style={{ 
-        width: "70%", 
-        backgroundColor: "#f0f0f0",  
-        display: "flex", 
-        alignItems: "center",
-        justifyContent: "center"
-      }}>
-        <h2 style={{ color: "#075e54", fontSize: "24px" }}>Select a chat to start messaging</h2>
+      {/* Footer: Filters (Left) | Date (Right) */}
+      <div className="flex justify-between items-center mt3">
+        {/* Tags */}
+        <div className="flex flex-wrap">
+          {filters.length > 0 ? (
+            filters.map((tag, index) => (
+              <span key={index} className="bg-light-gray dark-gray br-pill ph3 pv1 f6 fw6 mr2 mb2">
+                #{tag}
+              </span>
+            ))
+          ) : (
+            <p className="gray f6">No tags available</p>
+          )}
+        </div>
+
+        {/* Date */}
+        <p className="gray f6">{new Date(created_at).toLocaleString()}</p>
       </div>
     </div>
   );
 };
 
-export default Chats;
+export default Card;

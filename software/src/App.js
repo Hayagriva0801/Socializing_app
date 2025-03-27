@@ -23,6 +23,7 @@ function App() {
         <Route path="/chats" element={<Chats />} />
         <Route path="/chat/:username" element={<ChatRoom />} />
         <Route path="/profile" element={<Profile />} />
+        <Route path="/chat/:username" element={<Chats />} />
 
       </Routes>
     </Router>

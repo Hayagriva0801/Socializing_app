@@ -54,15 +54,16 @@ function Main() {
           justifyContent: "center"
         }}
       >
-        {notices.map((notice) => (
-          <Card
-            key={notice._id}
-            title={notice.title}
-            content={notice.content}
-            filters={notice.filters || (notice.filter ? [notice.filter] : [])} // ✅ Handle both cases
-            created_at={notice.created_at}
-          />
-        ))}
+       {notices.map((notice) => (
+      <Card
+        key={notice._id}
+        title={notice.title}
+        content={notice.content}
+        filters={notice.filters}
+        created_at={notice.created_at}
+        username={notice.username}  // ✅ Now passed correctly!
+  />
+))}
       </div>
     </div>
   );
