@@ -1,26 +1,39 @@
 import React, { useEffect, useState } from "react";
-import { Link, useParams } from "react-router-dom";
+import { Link, useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
-
+import Navbar from "./navbar";
 const Chats = () => {
   const [users, setUsers] = useState([]);
   const currentUser = localStorage.getItem("currentUser"); // Logged-in user
   const { username: selectedChat } = useParams(); // Get selected chat user
+  const navigate = useNavigate();
 
   useEffect(() => {
-    if (!currentUser) return;
+    if (!currentUser) {
+      navigate("/login");
+      return;
+    }
 
     axios.get("http://127.0.0.1:5000/all_users") // Fetch all users
       .then(response => {
         setUsers(response.data);
       })
       .catch(error => console.error("Error fetching users:", error));
-  }, [currentUser]); 
+  }, [currentUser, navigate]);
+
+  const handleLogout = () => {
+    localStorage.removeItem("currentUser");
+    navigate("/login");
+  };
 
   return (
-    <div style={{ display: "flex", height: "100vh" }}>
+    <div style={{ height: "100vh", display: "flex", flexDirection: "column" }}>
+      {/* Navbar */}
+      <Navbar />
+
       {/* Left Sidebar - Chat List */}
       <div style={{ 
+        flex: 1, 
         width: "30%", 
         backgroundColor: "#054d44",  
         padding: "20px", 
