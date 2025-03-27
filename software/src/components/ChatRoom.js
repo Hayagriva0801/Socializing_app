@@ -8,14 +8,20 @@ const ChatRoom = () => {
   const [messages, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState("");
   const [showEmojiPicker, setShowEmojiPicker] = useState(false);
-  const [users, setUsers] = useState([]); // To store all users
+  const [users, setUsers] = useState([]); // Store all users
 
   const currentUser = localStorage.getItem("currentUser"); // Logged-in user
 
   useEffect(() => {
-    fetchMessages();
     fetchUsers();
   }, []);
+
+  useEffect(() => {
+    fetchMessages();
+    const interval = setInterval(fetchMessages, 2000); // Auto-refresh every 2s
+
+    return () => clearInterval(interval); // Cleanup when component unmounts
+  }, [username]); // Runs every time username changes
 
   const fetchMessages = () => {
     axios.get(`http://127.0.0.1:5000/messages/${currentUser}/${username}`)
@@ -41,8 +47,7 @@ const ChatRoom = () => {
       receiver: username,
       message: newMessage
     }).then(() => {
-      const newMsg = { sender: currentUser, receiver: username, message: newMessage };
-      setMessages([...messages, newMsg]); // Add new message to chat
+      fetchMessages(); // Ensure latest messages appear
       setNewMessage("");
     }).catch(error => console.error("Error sending message:", error));
   };
@@ -56,7 +61,7 @@ const ChatRoom = () => {
       {/* Left Sidebar - Dark Green */}
       <div style={{ 
         width: "30%", 
-        backgroundColor: "#054d44",  // Dark green sidebar
+        backgroundColor: "#054d44",  
         padding: "20px", 
         overflowY: "scroll",
         borderRight: "2px solid #bbb",
@@ -66,16 +71,20 @@ const ChatRoom = () => {
         <ul style={{ listStyleType: "none", padding: "0" }}>
           {users.length > 0 ? (
             users.map((user, index) => (
-              user.username !== currentUser && user.username !== username && ( // Hide current and selected user
+              user.username !== currentUser && user.username !== username && ( 
                 <li key={index} style={{ 
                   padding: "12px", 
                   marginBottom: "5px",
                   borderBottom: "1px solid #aaa",
-                  backgroundColor: user.username === username ? "#0f766e" : "transparent", // Highlight selected chat
+                  backgroundColor: user.username === username ? "#0f766e" : "transparent",
                   cursor: "pointer",
                   borderRadius: "8px"
                 }}>
-                  <Link to={`/chat/${user.username}`} style={{ textDecoration: "none", color: "white", fontWeight: "bold", display: "block" }}>
+                  <Link 
+                    to={`/chat/${user.username}`} 
+                    onClick={() => setMessages([])} // Reset messages on switch
+                    style={{ textDecoration: "none", color: "white", fontWeight: "bold", display: "block" }}
+                  >
                     {user.username}
                   </Link>
                 </li>
